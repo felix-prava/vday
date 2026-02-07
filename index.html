@@ -14,7 +14,6 @@
         font-family: "Poppins", "Comic Sans MS", sans-serif;
       }
 
-
       body {
         margin: 0;
         min-height: 100vh;
@@ -88,20 +87,19 @@
   </head>
   <body>
     <div class="card" id="card">
-      <div class="emoji">🐣💗</div>
+      <div class="emoji">🐈💗</div>
       <h1>Will you be my Valentine?</h1>
 
       <div class="buttons" id="buttons">
         <button id="yesBtn">Yes 💖</button>
         <button id="noBtn">No 🙃</button>
       </div>
-
-      <div class="note">*No is not an option 😈*</div>
     </div>
 
     <script>
       const noBtn = document.getElementById("noBtn");
       const yesBtn = document.getElementById("yesBtn");
+      const header = document.querySelector("h1");
 
       let escaped = false;
       let initialRect = null;
@@ -137,10 +135,14 @@
 
         noBtn.style.left = `${x}px`;
         noBtn.style.top = `${y}px`;
+
+        // Revert header text when No escapes
+        header.textContent = "Will you be my Valentine?";
       }
 
       // Desktop: flee when cursor is near
       document.addEventListener("mousemove", (e) => {
+        if (e.target === yesBtn) return;
         const rect = noBtn.getBoundingClientRect();
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
@@ -150,10 +152,16 @@
       });
 
       // Mobile: flee on touch
-      document.addEventListener("touchstart", escapeNoButton);
+      document.addEventListener("touchstart", (e) => {
+        if (e.target === yesBtn) return; // ignore Yes tap
+        escapeNoButton();
+      });
 
-      // YES = HEART ATTACK
+      // YES = HEART ATTACK + header update
       yesBtn.addEventListener("click", () => {
+        header.textContent =
+          "Awesome!! My friend, Sir Thomas, will contact you and give you all the details!!";
+
         const end = Date.now() + 3500;
 
         (function frame() {
